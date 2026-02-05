@@ -1,38 +1,33 @@
-import numpy as np
 import pandas as pd
+import numpy as np
 
-
-class MyLineReg:
-    def init(self, n_iter=100, learning_rate=0.01, weights=None):
+class MyLineReg():
+    def __init__(self, n_iter=100, learning_rate=0.01, weights=None):
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
 
+    def __str__(self):
+        return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
+    
     def fit(self, X, y, verbose=False):
-        X_ = X.copy()
-        X_.insert(0, 'bias', 1)
+        X.insert(0, "bias", 1)
+        print(X)
 
-        X_mat = X_.values
-        y_vec = y.values
-
-        m, n = X_mat.shape
+        print(X.shape)
+        m, n = X.shape
+        print(n, m)
 
         self.weights = np.ones(n)
+        print(self.weights)
 
-        y_pred = X_mat @ self.weights
-        loss = np.mean((y_pred - y_vec)**2)
-        if verbose:
-            print(f"start | loss: {loss}")
 
-        for i in range(1, self.n_iter + 1):
-            y_pred = X_mat @ self.weights
-            errors = y_pred - y_vec
-            gradient = (2 / m) * (X_mat.T @ errors)
-            self.weights -= self.learning_rate * gradient
+X = pd.DataFrame({"x1": [1, 2, 3],
+                  "x2": [4, 5, 6],
+                  "x3": [7, 8, 9]})
+y = pd.Series([1, 2, 3])
 
-            loss = np.mean(errors**2)
-            if verbose and i % verbose == 0:
-                print(f"{i} | loss: {loss}")
-
-    def get_coef(self):
-        return self.weights[1:]
+verbose = 10
+MyLineReg1 = MyLineReg()
+print(MyLineReg1)
+MyLineReg1.fit(X, y, verbose)
