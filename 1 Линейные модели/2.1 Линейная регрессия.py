@@ -21,6 +21,25 @@ class MyLineReg():
         self.weights = np.ones(n)
         print(self.weights)
 
+        X_mat = X.values
+        print(X_mat)
+        y_vec = y.values
+        print(y_vec)
+        y_pred = X_mat @ self.weights
+        errors = y_pred - y_vec
+        errors_2 = errors**2
+        MSE = np.mean(errors**2)
+        print(y_pred)
+        print(errors_2)
+        print(errors)
+        print(MSE)
+
+        for i in range(1, self.n_iter + 1):
+            pass
+            # y_pred = X_mat @ self.weights
+            # errors = y_pred - y_vec
+            # print()       
+
 
 X = pd.DataFrame({"x1": [1, 2, 3],
                   "x2": [4, 5, 6],
