@@ -26,9 +26,8 @@ class MyLineReg():
         errors = y_pred - y_vec
         MSE = np.mean(errors**2)
 
-        # gradient = np.sum(2*(y_pred - y_vec) @ X_mat)
-        # gradient = 2*(y_pred - y_vec) @ X_mat
-        # print(gradient)
+        gradient = (2 / m) * (X_mat.T @ (y_pred - y_vec))
+        
 
         print("X после ввода нового столбца: \n", X, "\n")
         print("self.weights после заполнения: \n", self.weights, "\n")
@@ -37,6 +36,7 @@ class MyLineReg():
         print("y_pred \n", y_pred, "\n")
         print("errors \n", errors, "\n")
         print("MSE \n", MSE, "\n")
+        print("gradient \n", gradient, "\n")
 
 
 
@@ -72,10 +72,10 @@ class MyLineReg():
             # print()       
 
 
-X = pd.DataFrame({"x1": [1, 2, 3],
-                  "x2": [4, 5, 6],
-                  "x3": [7, 8, 9]})
-y = pd.Series([1, 2, 3])
+X = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+y = pd.Series([0, 1])
 
 verbose = 10
 MyLineReg1 = MyLineReg()
