@@ -10,6 +10,16 @@ class MyLineReg():
     def __str__(self):
         return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
     
+    def demo_fit(self, X, y, verbose=False):
+        X.insert(0, "bias", 1)
+        m, n = X.shape # m - кол-во строк; n - кол-во столбцов
+        self.weights = np.ones(n) # засовывваем в эту переменную np массив со значениями 1 в кол-ве равном кол-ву переменных в одном векторе в X
+        X_mat = X.values # Превращаем из DataFrame в np array
+        y_vec = y.values
+        y_pred = X_mat @ self.weights
+
+
+
     def fit(self, X, y, verbose=False):
         X.insert(0, "bias", 1)
         print(X)
