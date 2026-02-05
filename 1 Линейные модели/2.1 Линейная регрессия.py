@@ -17,6 +17,7 @@ class MyLineReg():
         X_mat = X.values # Превращаем из DataFrame в np array
         y_vec = y.values
         y_pred = X_mat @ self.weights
+        
 
 
 
