@@ -44,7 +44,8 @@ class MyLineReg():
 
 
     def fit(self, X, y, verbose=False):
-        X.insert(0, "bias", 1)
+        X_with_bias = X.copy()
+        X_with_bias.insert(0, "bias", 1)
         m, n = X.shape # m - кол-во строк; n - кол-во столбцов
 
         self.weights = np.ones(n) # засовывваем в эту переменную np массив со значениями 1 в кол-ве равном кол-ву переменных в одном векторе в X
@@ -73,6 +74,14 @@ class MyLineReg():
 
     def get_coef(self):
         return self.weights[1:]
+    
+    def predict(self, X):
+        X_with_bias = X.copy()
+        X_with_bias.insert(0, "bias", 1)
+
+        y_pred = X_with_bias @ self.weights
+        
+        return sum(y_pred)
 
 
 
