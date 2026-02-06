@@ -46,11 +46,11 @@ class MyLineReg():
     def fit(self, X, y, verbose=False):
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
-        m, n = X.shape # m - кол-во строк; n - кол-во столбцов
+        m, n = X_with_bias.shape # m - кол-во строк; n - кол-во столбцов
 
         self.weights = np.ones(n) # засовывваем в эту переменную np массив со значениями 1 в кол-ве равном кол-ву переменных в одном векторе в X
         
-        X_mat = X.values # Превращаем из DataFrame в np array
+        X_mat = X_with_bias.values # Превращаем из DataFrame в np array
         y_vec = y.values
         y_pred = X_mat @ self.weights
 
@@ -81,7 +81,7 @@ class MyLineReg():
 
         y_pred = X_with_bias @ self.weights
         
-        return sum(y_pred)
+        return y_pred
 
 
 
@@ -91,7 +91,12 @@ X = pd.DataFrame({"x1": [3, 2],
                   "x3": [9, 8]})
 y = pd.Series([0, 1])
 
+X_test = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+
 verbose = 10
 MyLineReg1 = MyLineReg()
 print(MyLineReg1)
 MyLineReg1.fit(X, y, verbose)
+print(MyLineReg1.predict(X_test))
