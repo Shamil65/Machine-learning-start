@@ -54,7 +54,9 @@ class MyLineReg():
         pass
 
     def mse(y_true, y_pred):
-        pass
+        errors = y_pred - y_true
+        return np.mean(errors**2)
+
 
     def rmse(y_true, y_pred):
         pass
