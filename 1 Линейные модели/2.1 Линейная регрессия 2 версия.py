@@ -26,16 +26,20 @@ class MyLineReg():
         # Необходимо внутри цикла реализовать выбор метрики и показ, 
         # но само обучение будет проиходить с помощью mse
 
-        if self.metric == "mae" and verbose: # start | loss: 42027.65 | <metric_name>: 234.65
-            print(f"start | loss: {loss_mse} | mae: {self.mae(y_vec, y_pred)}")
-        elif self.metric == "mse" and verbose:
-            print(f"start | loss: {loss_mse} | mse: {self.mse(y_vec, y_pred)}")
-        elif self.metric == "rmse" and verbose:
-            print(f"start | loss: {loss_mse} | rmse: {self.rmse(y_vec, y_pred)}")
-        elif self.metric == "mape" and verbose:
-            print(f"start | loss: {loss_mse} | mape: {self.mape(y_vec, y_pred)}")
-        elif self.metric == "r2" and verbose:
-            print(f"start | loss: {loss_mse} | r2: {self.r2(y_vec, y_pred)}")
+        if verbose:
+            if self.metric == "mae": # start | loss: 42027.65 | <metric_name>: 234.65
+                print(f"start | loss: {loss_mse} | mae: {self.mae(y_vec, y_pred)}")
+            elif self.metric == "mse":
+                print(f"start | loss: {loss_mse} | mse: {self.mse(y_vec, y_pred)}")
+            elif self.metric == "rmse":
+                print(f"start | loss: {loss_mse} | rmse: {self.rmse(y_vec, y_pred)}")
+            elif self.metric == "mape":
+                print(f"start | loss: {loss_mse} | mape: {self.mape(y_vec, y_pred)}")
+            elif self.metric == "r2":
+                print(f"start | loss: {loss_mse} | r2: {self.r2(y_vec, y_pred)}")
+            elif self.metric == None:
+                print(f"start | loss: {loss_mse}")
+
        
 
         for i in range(1, self.n_iter + 1):
@@ -61,7 +65,11 @@ class MyLineReg():
                     print(f"{i} | loss: {loss_mse} | mape: {self.mape(y_vec, y_pred)}")
                 elif self.metric == "r2":
                     print(f"{i} | loss: {loss_mse} | r2: {self.r2(y_vec, y_pred)}")
-                
+                elif self.metric == None:
+                    print(f"{i} | loss: {loss_mse}")
+
+    def get_best_score(self):
+        pass
 
 
     def get_coef(self):
@@ -70,9 +78,8 @@ class MyLineReg():
     def predict(self, X):
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
-        y_pred = X_with_bias @ self.weights
+        return X_with_bias.values @ self.weights
         
-        return sum(y_pred)
     
     def mae(self, y_true, y_pred):
         errors = abs(y_pred - y_true)
@@ -89,7 +96,7 @@ class MyLineReg():
         return np.sqrt(mse)
 
     def mape(self, y_true, y_pred):
-        part_of_mape = np.sum(np.abs((y_pred - y_true)/(y_pred)))
+        part_of_mape = np.sum(np.abs((y_pred - y_true)/(y_true)))
         n = len(y_true)
         return (100/n) * part_of_mape
 
