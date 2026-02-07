@@ -65,7 +65,9 @@ class MyLineReg():
         return np.sqrt(mse)
 
     def mape(y_true, y_pred):
-        pass
+        part_of_mape = np.sum((y_pred - y_true)/(y_pred))
+        n = len(y_true)
+        return (100/n) * part_of_mape
 
     def r2(y_true, y_pred):
         errors = y_pred - y_true
