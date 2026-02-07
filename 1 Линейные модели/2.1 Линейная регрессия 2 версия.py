@@ -25,31 +25,20 @@ class MyLineReg():
         # Необходимо внутри цикла реализовать выбор метрики и показ, 
         # но само обучение будет проиходить с помощью mse
 
-        MSE = np.mean(errors**2)
         if self.metric == "mae" and verbose:
             print(f"start | loss: {self.mae(y_vec, y_pred)}")
         elif self.metric == "mse" and verbose:
-            print(f"start | loss: {MSE}")
+            print(f"start | loss: {self.mse(y_vec, y_pred)}")
         elif self.metric == "rmse" and verbose:
-            print(f"start | loss: {MSE}")
+            print(f"start | loss: {self.rmse(y_vec, y_pred)}")
         elif self.metric == "mape" and verbose:
-            print(f"start | loss: {MSE}")
+            print(f"start | loss: {self.mape(y_vec, y_pred)}")
         elif self.metric == "r2" and verbose:
-            print(f"start | loss: {MSE}")
+            print(f"start | loss: {self.r2(y_vec, y_pred)}")
 
         for i in range(1, self.n_iter + 1):
-            if self.metric == "mae" and i % verbose == 0:
-                pass
-            elif self.metric == "mse":
-                pass
-            elif self.metric == "rmse":
-                pass
-            elif self.metric == "mape":
-                pass
-            elif self.metric == "r2":
-                print(self.mae(y_vec, y_pred))
             y_pred = X_mat @ self.weights
-            errors = y_pred - y_vec           # 🔹 ОБЯЗАТЕЛЬНО обновляем
+            errors = y_pred - y_vec         
             gradient = (2 / m) * (X_mat.T @ errors)
             self.weights = self.weights - self.learning_rate * gradient
             loss = np.mean(errors**2)         # теперь верный loss
@@ -57,6 +46,18 @@ class MyLineReg():
             if verbose and i % verbose == 0:
                 print(f"iter {i} | loss: {loss}")
                 print(self.weights)
+
+            if verbose and i % verbose == 0:   
+                if self.metric == "mae":
+                    print(f"iter {i} | mae: {self.mae(y_vec, y_pred)}")
+                elif self.metric == "mse":
+                    print(f"iter {i} | mse: {self.mse(y_vec, y_pred)}")
+                elif self.metric == "rmse":
+                    print(f"iter {i} | rmse: {self.rmse(y_vec, y_pred)}")
+                elif self.metric == "mape":
+                    print(f"iter {i} | mape: {self.mape(y_vec, y_pred)}")
+                elif self.metric == "r2":
+                    print(f"iter {i} | r2: {self.r2(y_vec, y_pred)}")
 
 
     def get_coef(self):
