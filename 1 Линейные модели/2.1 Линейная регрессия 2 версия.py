@@ -21,43 +21,47 @@ class MyLineReg():
         X_mat = X_with_bias.values # Превращаем из DataFrame в np array
         y_vec = y.values
         y_pred = X_mat @ self.weights
+        loss_mse = np.mean((y_pred - y_vec)**2)
         
         # Необходимо внутри цикла реализовать выбор метрики и показ, 
         # но само обучение будет проиходить с помощью mse
 
-        if self.metric == "mae" and verbose:
-            print(f"start | loss: {self.mae(y_vec, y_pred)}")
+        if self.metric == "mae" and verbose: # start | loss: 42027.65 | <metric_name>: 234.65
+            print(f"start | loss: {loss_mse} | mae: {self.mae(y_vec, y_pred)}")
         elif self.metric == "mse" and verbose:
-            print(f"start | loss: {self.mse(y_vec, y_pred)}")
+            print(f"start | loss: {loss_mse} | mse: {self.mse(y_vec, y_pred)}")
         elif self.metric == "rmse" and verbose:
-            print(f"start | loss: {self.rmse(y_vec, y_pred)}")
+            print(f"start | loss: {loss_mse} | rmse: {self.rmse(y_vec, y_pred)}")
         elif self.metric == "mape" and verbose:
-            print(f"start | loss: {self.mape(y_vec, y_pred)}")
+            print(f"start | loss: {loss_mse} | mape: {self.mape(y_vec, y_pred)}")
         elif self.metric == "r2" and verbose:
-            print(f"start | loss: {self.r2(y_vec, y_pred)}")
+            print(f"start | loss: {loss_mse} | r2: {self.r2(y_vec, y_pred)}")
+       
 
         for i in range(1, self.n_iter + 1):
             y_pred = X_mat @ self.weights
             errors = y_pred - y_vec         
             gradient = (2 / m) * (X_mat.T @ errors)
             self.weights = self.weights - self.learning_rate * gradient
-            loss = np.mean(errors**2)         # теперь верный loss
+            loss_mse = np.mean((y_pred - y_vec)**2)
 
-            if verbose and i % verbose == 0:
-                print(f"iter {i} | loss: {loss}")
-                print(self.weights)
 
-            if verbose and i % verbose == 0:   
+            # if verbose and i % verbose == 0:
+            #     print(f"iter {i} | loss: {loss}")
+            #     print(self.weights)
+
+            if verbose and i % verbose == 0:   # 100 | loss: 1222.87 | <metric_name>: 114.35
                 if self.metric == "mae":
-                    print(f"iter {i} | mae: {self.mae(y_vec, y_pred)}")
+                    print(f"{i} | loss: {loss_mse} | mae: {self.mae(y_vec, y_pred)}")
                 elif self.metric == "mse":
-                    print(f"iter {i} | mse: {self.mse(y_vec, y_pred)}")
+                    print(f"{i} | loss: {loss_mse} | mse: {self.mse(y_vec, y_pred)}")
                 elif self.metric == "rmse":
-                    print(f"iter {i} | rmse: {self.rmse(y_vec, y_pred)}")
+                    print(f"{i} | loss: {loss_mse} | rmse: {self.rmse(y_vec, y_pred)}")
                 elif self.metric == "mape":
-                    print(f"iter {i} | mape: {self.mape(y_vec, y_pred)}")
+                    print(f"{i} | loss: {loss_mse} | mape: {self.mape(y_vec, y_pred)}")
                 elif self.metric == "r2":
-                    print(f"iter {i} | r2: {self.r2(y_vec, y_pred)}")
+                    print(f"{i} | loss: {loss_mse} | r2: {self.r2(y_vec, y_pred)}")
+                
 
 
     def get_coef(self):
@@ -112,9 +116,11 @@ X_test = pd.DataFrame({"x1": [3, 2],
                   "x3": [9, 8]})
 
 verbose = 10
-MyLineReg1 = MyLineReg()
+metric="mse"
+
+MyLineReg1 = MyLineReg(n_iter=100, learning_rate=0.1, metric="rmse")
 print(MyLineReg1)
+
 MyLineReg1.fit(X, y, verbose)
 print(MyLineReg1.predict(X_test))
 
-MyLineReg1.metric(mse=1)
