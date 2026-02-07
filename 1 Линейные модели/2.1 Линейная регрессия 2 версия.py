@@ -68,7 +68,11 @@ class MyLineReg():
         pass
 
     def r2(y_true, y_pred):
-        pass
+        errors = y_pred - y_true
+        numerator_r2 = np.sum(errors**2)
+        denominator_r2 = np.sum(y_pred - np.mean(y_true))
+        
+
         
     
 
