@@ -6,6 +6,7 @@ class MyLineReg():
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
+        self.metric = metric
 
     def __str__(self):
         return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
@@ -20,6 +21,18 @@ class MyLineReg():
         X_mat = X_with_bias.values # Превращаем из DataFrame в np array
         y_vec = y.values
         y_pred = X_mat @ self.weights
+        print(r2(y_vec, y_pred))
+
+        if self.metric == "mae":
+            pass
+        elif self.metric == "mse":
+            pass
+        elif self.metric == "rmse":
+            pass
+        elif self.metric == "mape":
+            pass
+        elif self.metric == "r2":
+            print(self.mae(y_vec, y_pred))
 
         errors = y_pred - y_vec
         MSE = np.mean(errors**2)
@@ -49,26 +62,26 @@ class MyLineReg():
         
         return sum(y_pred)
     
-    def mae(y_true, y_pred):
+    def mae(self, y_true, y_pred):
         errors = abs(y_pred - y_true)
         return np.mean(errors)
 
-    def mse(y_true, y_pred):
+    def mse(self, y_true, y_pred):
         errors = y_pred - y_true
         return np.mean(errors**2)
 
 
-    def rmse(y_true, y_pred):
+    def rmse(self, y_true, y_pred):
         errors = y_pred - y_true
         mse = np.mean(errors**2)
         return np.sqrt(mse)
 
-    def mape(y_true, y_pred):
+    def mape(self, y_true, y_pred):
         part_of_mape = np.sum(np.abs((y_pred - y_true)/(y_pred)))
         n = len(y_true)
         return (100/n) * part_of_mape
 
-    def r2(y_true, y_pred):
+    def r2(self, y_true, y_pred):
         errors = y_pred - y_true
         numerator_r2 = np.sum(errors**2)
         denominator_r2 = np.sum((y_true - np.mean(y_true))**2)
