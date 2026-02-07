@@ -60,7 +60,9 @@ class MyLineReg():
 
 
     def rmse(y_true, y_pred):
-        pass
+        errors = y_pred - y_true
+        mse = np.mean(errors**2)
+        return np.sqrt(mse)
 
     def mape(y_true, y_pred):
         pass
