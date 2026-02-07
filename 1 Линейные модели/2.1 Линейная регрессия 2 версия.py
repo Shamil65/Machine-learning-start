@@ -70,7 +70,8 @@ class MyLineReg():
     def r2(y_true, y_pred):
         errors = y_pred - y_true
         numerator_r2 = np.sum(errors**2)
-        denominator_r2 = np.sum(y_pred - np.mean(y_true))
+        denominator_r2 = np.sum((y_pred - np.mean(y_true))**2)
+        return 1 - (numerator_r2 / denominator_r2)
         
 
         
