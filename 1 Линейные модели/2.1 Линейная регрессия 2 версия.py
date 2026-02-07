@@ -45,7 +45,6 @@ class MyLineReg():
     def predict(self, X):
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
-
         y_pred = X_with_bias @ self.weights
         
         return sum(y_pred)
@@ -65,14 +64,14 @@ class MyLineReg():
         return np.sqrt(mse)
 
     def mape(y_true, y_pred):
-        part_of_mape = np.sum((y_pred - y_true)/(y_pred))
+        part_of_mape = np.sum(np.abs((y_pred - y_true)/(y_pred)))
         n = len(y_true)
         return (100/n) * part_of_mape
 
     def r2(y_true, y_pred):
         errors = y_pred - y_true
         numerator_r2 = np.sum(errors**2)
-        denominator_r2 = np.sum((y_pred - np.mean(y_true))**2)
+        denominator_r2 = np.sum((y_true - np.mean(y_true))**2)
         return 1 - (numerator_r2 / denominator_r2)
         
 
