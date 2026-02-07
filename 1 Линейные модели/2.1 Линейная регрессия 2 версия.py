@@ -51,7 +51,8 @@ class MyLineReg():
         return sum(y_pred)
     
     def mae(y_true, y_pred):
-        pass
+        errors = abs(y_pred - y_true)
+        return np.mean(errors)
 
     def mse(y_true, y_pred):
         errors = y_pred - y_true
