@@ -21,26 +21,33 @@ class MyLineReg():
         X_mat = X_with_bias.values # Превращаем из DataFrame в np array
         y_vec = y.values
         y_pred = X_mat @ self.weights
-        print(r2(y_vec, y_pred))
+        
+        # Необходимо внутри цикла реализовать выбор метрики и показ, 
+        # но само обучение будет проиходить с помощью mse
 
-        if self.metric == "mae":
-            pass
-        elif self.metric == "mse":
-            pass
-        elif self.metric == "rmse":
-            pass
-        elif self.metric == "mape":
-            pass
-        elif self.metric == "r2":
-            print(self.mae(y_vec, y_pred))
-
-        errors = y_pred - y_vec
         MSE = np.mean(errors**2)
-
-        if verbose:
+        if self.metric == "mae" and verbose:
+            print(f"start | loss: {self.mae(y_vec, y_pred)}")
+        elif self.metric == "mse" and verbose:
+            print(f"start | loss: {MSE}")
+        elif self.metric == "rmse" and verbose:
+            print(f"start | loss: {MSE}")
+        elif self.metric == "mape" and verbose:
+            print(f"start | loss: {MSE}")
+        elif self.metric == "r2" and verbose:
             print(f"start | loss: {MSE}")
 
         for i in range(1, self.n_iter + 1):
+            if self.metric == "mae" and i % verbose == 0:
+                pass
+            elif self.metric == "mse":
+                pass
+            elif self.metric == "rmse":
+                pass
+            elif self.metric == "mape":
+                pass
+            elif self.metric == "r2":
+                print(self.mae(y_vec, y_pred))
             y_pred = X_mat @ self.weights
             errors = y_pred - y_vec           # 🔹 ОБЯЗАТЕЛЬНО обновляем
             gradient = (2 / m) * (X_mat.T @ errors)
