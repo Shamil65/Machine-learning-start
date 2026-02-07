@@ -7,6 +7,7 @@ class MyLineReg():
         self.learning_rate = learning_rate
         self.weights = weights
         self.metric = metric
+        self.loss_array = []
 
     def __str__(self):
         return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
@@ -68,8 +69,27 @@ class MyLineReg():
                 elif self.metric == None:
                     print(f"{i} | loss: {loss_mse}")
 
+        y_pred = X_mat @ self.weights
+        
+        self.loss_array.append(self.mae(y_vec, y_pred))
+        self.loss_array.append(self.mse(y_vec, y_pred))
+        self.loss_array.append(self.rmse(y_vec, y_pred))
+        self.loss_array.append(self.mape(y_vec, y_pred))
+        self.loss_array.append(self.r2(y_vec, y_pred))
+
     def get_best_score(self):
-        pass
+        if self.metric == "mae":
+            return self.loss_array[0]
+        elif self.metric == "mse":
+            return self.loss_array[1]
+        elif self.metric == "rmse":
+            return self.loss_array[2]
+        elif self.metric == "mape":
+            return self.loss_array[3]
+        elif self.metric == "r2":
+            return self.loss_array[4]
+        elif self.metric == None:
+            pass
 
 
     def get_coef(self):
@@ -131,3 +151,4 @@ print(MyLineReg1)
 MyLineReg1.fit(X, y, verbose)
 print(MyLineReg1.predict(X_test))
 
+MyLineReg1.get_best_score()
