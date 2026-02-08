@@ -1,0 +1,83 @@
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Виртуальные окружения
+venv/
+env/
+ENV/
+.venv/
+env.bak/
+venv.bak/
+
+# Зависимости
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ======================
+# Unity (упоминалось в лекции)
+# ======================
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# Автосохранения
+*.csproj.user
+*.sln.meta
+*.csproj.meta
+*.unity.meta
+*.asset.meta
+*.meta
+
+# ======================
+# Общие артефакты
+# ======================
+# ОС
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Логи и дампы
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# ======================
+# Изображения и данные (НЕ ИГНОРИТЬ исходники!)
+# ======================
+# Игнорируем ТОЛЬКО временные/обработанные файлы:
+*_dithered.*
+*_binary.*
+*_gray.*
+*_result.*
+output/
+results/
+temp/
+*.tmp
