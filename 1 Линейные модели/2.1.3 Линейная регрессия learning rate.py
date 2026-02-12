@@ -46,8 +46,15 @@ class MyLineReg():
             print(f"start | loss: {MSE}")  
             
 
+        is_lr_callable = callable(self.learning_rate)
 
         for i in range(1, self.n_iter + 1):
+
+            if is_lr_callable:
+                self.learning_rate_iter = self.learning_rate(i)
+            else:
+                self.learning_rate_iter = self.learning_rate
+
             y_pred = X_mat @ self.weights
             errors = y_pred - y_vec
             gradient = (2 / m) * (X_mat.T @ errors)
@@ -56,7 +63,7 @@ class MyLineReg():
 
             if self.reg == "l1":
                 L1_gradient = gradient + self.l1_coef * np.sign(self.weights)
-                self.weights = self.weights - self.learning_rate * L1_gradient
+                self.weights = self.weights - self.learning_rate_iter * L1_gradient
 
                 if verbose and i % verbose == 0:
                     L1_loss = MSE + ( self.l1_coef * np.sum(np.abs(self.weights)) ) + ( self.l2_coef * np.sum((self.weights)**2) )
@@ -65,7 +72,7 @@ class MyLineReg():
                 
             elif self.reg == "l2":
                 L2_gradient = gradient + self.l2_coef * 2 * self.weights
-                self.weights = self.weights - self.learning_rate * L2_gradient
+                self.weights = self.weights - self.learning_rate_iter * L2_gradient
 
                 if verbose and i % verbose == 0:
                     L2_loss = MSE + self.l2_coef * np.sum((self.weights)**2)
@@ -74,14 +81,14 @@ class MyLineReg():
             
             elif self.reg == "elasticnet":
                 ElasticNet_gradient = gradient + self.l1_coef * np.sign(self.weights) + self.l2_coef * 2 * self.weights
-                self.weights = self.weights - self.learning_rate * ElasticNet_gradient
+                self.weights = self.weights - self.learning_rate_iter * ElasticNet_gradient
 
                 if verbose and i % verbose == 0:
                     ElasticNet_loss = MSE + ( self.l1_coef * np.sum(np.abs(self.weights)) ) + ( self.l2_coef * np.sum((self.weights)**2) )
                     print(f"iter {i} | loss: {ElasticNet_loss}")
 
             elif self.reg == None:
-                self.weights = self.weights - self.learning_rate * gradient
+                self.weights = self.weights - self.learning_rate_iter * gradient
 
                 if verbose and i % verbose == 0:
                     MSE = np.mean((y_pred - y_vec)**2)
