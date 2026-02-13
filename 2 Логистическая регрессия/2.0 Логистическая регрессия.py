@@ -20,10 +20,16 @@ class MyLogReg():
         # Расчет y_pred
         print("X_with_bias", X_with_bias)
         print("self.weights", self.weights)
-        
+
         y_pred = X_with_bias @ self.weights
+        
 
         print(y_pred)
+        if verbose:
+            print(f"start | loss: {1}")
+
+        for i in range(1, self.n_iter + 1):
+            pass
 
 
 X = pd.DataFrame({"x1": [3, 2],
