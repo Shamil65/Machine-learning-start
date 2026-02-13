@@ -17,7 +17,28 @@ class MyLogReg():
         m, n = X_with_bias.shape
         self.weights = np.ones(n)
 
+        # Расчет y_pred
+        y_pred = X_with_bias @ self.weights
 
-qqq = MyLogReg()
+        print(y_pred)
 
-print(qqq)
+
+X = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+y = pd.Series([0, 1])
+
+X_test = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+
+verbose = 10
+metric="mse"
+
+MyLineReg1 = MyLogReg(n_iter=100, learning_rate=0.1)
+print(MyLineReg1)
+
+MyLineReg1.fit(X, y, verbose)
+# print(MyLineReg1.predict(X_test))
+
+# MyLineReg1.get_best_score()
