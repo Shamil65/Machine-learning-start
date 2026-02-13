@@ -18,6 +18,9 @@ class MyLogReg():
         self.weights = np.ones(n)
 
         # Расчет y_pred
+        print("X_with_bias", X_with_bias)
+        print("self.weights", self.weights)
+        
         y_pred = X_with_bias @ self.weights
 
         print(y_pred)
