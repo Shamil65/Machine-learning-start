@@ -11,25 +11,36 @@ class MyLogReg():
     def __str__(self):
         return f"MyLogReg class: n_iter={self.n_iter}, learning_rate={self.learning_rate}"
 
+    def sigmooid(self, z):
+        return 1.0 / (1.0 + np.exp(-z))
+
     def fit(self, X, y, verbose=False):
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
         m, n = X_with_bias.shape
         self.weights = np.ones(n)
 
+        X_mat = X_with_bias.values # Превращаем из DataFrame в np array
+        y_vec = y.values
+
         # Расчет y_pred
         print("X_with_bias", X_with_bias)
         print("self.weights", self.weights)
 
         y_pred = X_with_bias @ self.weights
-        
+        Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
+
+        m = y.size
+        gradient = X.T @ (self.sigmooid(X @ self.weights) - y) / m
 
         print(y_pred)
         if verbose:
-            print(f"start | loss: {1}")
+            print(f"start | loss: {Log_loss}")
 
         for i in range(1, self.n_iter + 1):
-            pass
+            y_pred = X_with_bias @ self.weights
+            Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
+
 
 
 X = pd.DataFrame({"x1": [3, 2],
