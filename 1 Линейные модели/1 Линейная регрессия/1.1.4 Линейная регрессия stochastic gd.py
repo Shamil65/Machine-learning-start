@@ -24,8 +24,6 @@ class MyLineReg():
     def fit(self, X, y, verbose=False):
 
         random.seed(self.random_state)
-
-        
     
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
