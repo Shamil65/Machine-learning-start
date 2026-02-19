@@ -13,6 +13,17 @@ class MyLogReg():
 
     def sigmooid(self, z):
         return 1.0 / (1.0 + np.exp(-z))
+    
+    def loss_function(self, X, y, weight):
+        m = len(y)
+        eps = 1e-15
+
+        y_pred = self.sigmooid(X @ weight)
+
+        loss = (-1/m) * np.sum(y * np.log(y_pred + eps) + (1 - y) * np.log(1 - y_pred + eps))
+
+        return loss
+    
 
     def fit(self, X, y, verbose=False):
         X_with_bias = X.copy()
@@ -24,22 +35,54 @@ class MyLogReg():
         y_vec = y.values
 
         # Расчет y_pred
-        print("X_with_bias", X_with_bias)
-        print("self.weights", self.weights)
 
         y_pred = X_with_bias @ self.weights
-        Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
+        start_loss = self.loss_function(X_mat, y_vec, self.weights)
 
-        m = y.size
-        gradient = X.T @ (self.sigmooid(X @ self.weights) - y) / m
-
-        print(y_pred)
         if verbose:
-            print(f"start | loss: {Log_loss}")
+            print(f"start | loss: {start_loss:.2f}")
 
         for i in range(1, self.n_iter + 1):
-            y_pred = X_with_bias @ self.weights
-            Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
+
+            y_pred = self.sigmooid(X_mat @ self.weights)
+
+            gradient = (X_mat.T @ (y_pred - y_vec))/m
+
+            self.weights -= self.learning_rate * gradient
+            
+            if verbose and i % verbose == 0:
+                current_loss = self.loss_function(X_mat, y_vec, self.weights)
+                print(f"{i} | loss: {current_loss:.2f}")
+
+    def get_coef(self):
+        return self.weights[1:]
+    
+    def predict(self, X):
+        X_with_bias = X.copy()
+        X_with_bias.insert(0, "bias", 1)
+        X_math = X_with_bias.values
+
+        y_pred = self.sigmooid(X_math @ self.weights)
+        y_pred_bin = y_pred > 0.5
+        return y_pred_bin
+
+
+    def predict_proba(self, X):
+        X_with_bias = X.copy()
+        X_with_bias.insert(0, "bias", 1)
+        X_math = X_with_bias.values
+
+        y_pred = self.sigmooid(X_math @ self.weights)
+
+        return y_pred
+        
+
+
+
+            # y_pred = X_with_bias @ self.weights
+            # Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
+
+
 
 
 
