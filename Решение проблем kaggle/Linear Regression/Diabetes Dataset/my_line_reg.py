@@ -126,24 +126,4 @@ class MyLineReg():
         X_with_bias.insert(0, "bias", 1)
 
         y_pred = X_with_bias @ self.weights
-        
         return y_pred
-
-
-
-
-X = pd.DataFrame({"x1": [3, 2],
-                  "x2": [6, 4],
-                  "x3": [9, 8]})
-y = pd.Series([0, 1])
-
-X_test = pd.DataFrame({"x1": [3, 2],
-                  "x2": [6, 4],
-                  "x3": [9, 8]})
-
-verbose = 10
-MyLineReg1 = MyLineReg()
-print(MyLineReg1)
-MyLineReg1.fit(X, y, verbose)
-print(MyLineReg1.predict(X_test))
-print(MyLineReg1.sign_())
