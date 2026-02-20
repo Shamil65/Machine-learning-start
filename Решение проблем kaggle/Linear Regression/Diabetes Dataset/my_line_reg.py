@@ -125,5 +125,5 @@ class MyLineReg():
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
 
-        y_pred = X_with_bias @ self.weights
+        y_pred = X_with_bias.values @ self.weights
         return y_pred
