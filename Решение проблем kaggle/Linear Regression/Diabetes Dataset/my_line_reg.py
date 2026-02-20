@@ -115,7 +115,7 @@ class MyLineReg():
                 self.weights = self.weights - self.learning_rate_iter * gradient
 
                 if verbose and i % verbose == 0:
-                    MSE = np.mean((y_pred - y_vec)**2)
+                    MSE = np.mean((y_pred - y_batch)**2)
                     print(f"iter {i} | loss: {MSE}")
 
     def get_coef(self):
