@@ -1,7 +1,2 @@
 # Виртуальные окружения
 venv/
-env/
-ENV/
-.venv/
-env.bak/
-venv.bak/
