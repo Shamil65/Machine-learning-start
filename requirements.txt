@@ -1,0 +1,19 @@
+# requirements.txt — зависимости проекта ml_study
+
+# Работа с массивами и данными
+numpy>=1.25.0
+pandas>=2.1.0
+
+# ML алгоритмы
+scikit-learn>=1.3.0
+
+# Работа с изображениями
+Pillow>=10.0.0
+
+# Jupyter для ноутбуков
+notebook>=7.0.0
+jupyterlab>=4.0.0
+
+# Вспомогательные библиотеки
+matplotlib>=3.8.0
+seaborn>=0.12.2

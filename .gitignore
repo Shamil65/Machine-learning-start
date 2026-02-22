@@ -1,2 +1,8 @@
 # Виртуальные окружения
-venv/
+.venv/
+
+# Python пакеты
+*.egg-info/
+*.egg
+dist/
+build/
