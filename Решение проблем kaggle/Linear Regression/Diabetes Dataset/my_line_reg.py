@@ -33,6 +33,9 @@ class MyLineReg():
         y_vec = y.values
         y_pred = X_mat @ self.weights
 
+        X_mat_ = X_with_bias.values
+        y_vec_ = y.values
+
         if verbose and self.reg == "l1":
             MSE = np.mean((y_pred - y_vec)**2)
             L1_loss = MSE + self.l1_coef * np.sum(np.abs(self.weights))
@@ -84,7 +87,7 @@ class MyLineReg():
             gradient = (2 / m) * (X_mat.T @ errors)
 
             
-
+            MSE = np.mean((y_pred - y_batch)**2)
             if self.reg == "l1":
                 L1_gradient = gradient + self.l1_coef * np.sign(self.weights)
                 self.weights = self.weights - self.learning_rate_iter * L1_gradient
@@ -93,7 +96,7 @@ class MyLineReg():
                     L1_loss = MSE + ( self.l1_coef * np.sum(np.abs(self.weights)) ) + ( self.l2_coef * np.sum((self.weights)**2) )
                     print(f"iter {i} | loss: {L1_loss}")
 
-                
+            
             elif self.reg == "l2":
                 L2_gradient = gradient + self.l2_coef * 2 * self.weights
                 self.weights = self.weights - self.learning_rate_iter * L2_gradient
@@ -115,8 +118,13 @@ class MyLineReg():
                 self.weights = self.weights - self.learning_rate_iter * gradient
 
                 if verbose and i % verbose == 0:
-                    MSE = np.mean((y_pred - y_batch)**2)
+                    MSE = np.mean(((X_mat_@self.weights) - y_vec_)**2)
                     print(f"iter {i} | loss: {MSE}")
+        
+        
+        y_predictions = X_mat_ @ self.weights
+        R2 = 1 - (np.sum((y_vec_ - y_predictions)**2))   /   (np.sum((y_vec_ - np.mean(y_vec_))**2))
+        print("R2: ", R2)
 
     def get_coef(self):
         return np.mean(self.weights[1:])
