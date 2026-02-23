@@ -103,6 +103,8 @@ class My_Line_Reg():
                 loss_ = self._calculate_loss(y_pred_full_data, y_vec, config)
                 self._log(i, loss_)
 
+            # специально добавили один цикл для вывод старт start
+            # поэтому сделали 0, self.n_iter + 1
             if i == 0:
                 continue
 
@@ -135,26 +137,3 @@ verbose = 10
 MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2, n_iter=10000)
 print(MyLineReg1)
 MyLineReg1.fit(X, y, verbose)
-
-
-# [Псевдокод на естественном языке]
-
-# метод fit(X, y, verbose=False):
-#     → подготовить данные
-#     → инициализировать веса
-#     → нормализовать ключ регуляризации
-#     → получить конфигурацию
-#     → если verbose:
-#         → сделать прогноз на полных данных
-#         → вызвать _calculate_loss(прогноз, y, конфигурация)
-#         → вызвать _log("start", loss)
-#     → цикл обучения
-
-# метод _calculate_loss(y_pred, y_vec, config):
-#     → посчитать MSE
-#     → посчитать штраф L1 через config.l1_coef
-#     → посчитать штраф L2 через config.l2_coef
-#     → вернуть сумму
-
-# метод _log(iteration, loss):
-#     → форматированный вывод
