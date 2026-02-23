@@ -1,7 +1,9 @@
 import os
+
 from ml_from_scratch import linear_regression
 
 # C:\Users\ZiganshinShamil\Desktop\Study\ml_study\03_ml_from_scratch\linear_regression.py
+
 
 # from linear_regression import MyLineReg
 
