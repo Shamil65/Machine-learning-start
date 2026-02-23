@@ -77,8 +77,8 @@ class My_Line_Reg():
             batch_size = n_count
         
         sample_rows_idx = random.sample(range(n_count), batch_size)
-        X_batch = X.iloc[sample_rows_idx].values
-        y_batch = y.iloc[sample_rows_idx].values
+        X_batch = X[sample_rows_idx]
+        y_batch = y[sample_rows_idx]
         
         return X_batch, y_batch
 
@@ -94,10 +94,22 @@ class My_Line_Reg():
 
         config = self.configuration_regularization[key]
         y_pred = X_mat @ self.weights
-        loss = self._calculate_loss(y_pred, y_vec, config)
+        
         
         for i in range(1, self.n_iter + 1):
+            X_batch, y_batch = self._get_batch(X_mat, y_vec, self.sgd_sample)
 
+            y_pred = X_batch @ self.weights
+            errors = y_pred - y_batch
+
+            loss_ = self._calculate_loss(y_pred, y_batch, config)
+            self._log(i, loss_)
+
+            m = X_batch.shape[0] 
+            gradient = (2 / m) * (X_batch.T @ errors)
+
+            regularized_gradient = gradient + config["l1_coef"] * np.sign(self.weights) + config["l2_coef"] * 2 * self.weights
+            self.weights -= regularized_gradient * self.learning_rate
         
 
 
