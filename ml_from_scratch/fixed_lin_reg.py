@@ -97,6 +97,7 @@ class My_Line_Reg():
         
         
         for i in range(0, self.n_iter + 1):
+            # цикл с обучением
 
             if verbose and i % verbose == 0:
                 y_pred_full_data = X_mat @ self.weights
