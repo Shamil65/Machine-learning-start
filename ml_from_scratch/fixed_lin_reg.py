@@ -58,11 +58,29 @@ class My_Line_Reg():
 
     
     def _log(self, iteration, loss):
+        # Функция для логирование итераций
         if iteration == 1:
             print(f"start | loss: {loss}")
         else:
             print(f"iter {iteration} | loss: {loss}")
 
+    
+    def _get_batch(self, X, y, sgd_sample):
+        # Функция для разделения данных для стахостического градиентного спуска
+        n_count = X.shape[0]
+
+        if type(sgd_sample) == int:
+            batch_size = sgd_sample
+        elif type(sgd_sample) == float:
+            batch_size = round(sgd_sample * n_count)
+        else:
+            batch_size = n_count
+        
+        sample_rows_idx = random.sample(range(n_count), batch_size)
+        X_batch = X.iloc[sample_rows_idx].values
+        y_batch = y.iloc[sample_rows_idx].values
+        
+        return X_batch, y_batch
 
     def fit(self,  X, y):
         # Функция с обучением
@@ -77,7 +95,9 @@ class My_Line_Reg():
         config = self.configuration_regularization[key]
         y_pred = X_mat @ self.weights
         loss = self._calculate_loss(y_pred, y_vec, config)
-        print(loss)
+        
+        for i in range(1, self.n_iter + 1):
+
         
 
 
