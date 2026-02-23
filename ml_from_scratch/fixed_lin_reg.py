@@ -49,23 +49,21 @@ class My_Line_Reg():
 
     def _prepare_data(self, X, y):
         # Функция для подготовки данных
-        ones_np_array = np.ones(len(X))
-        print(ones_np_array)
+        ones_np_array = np.zeros(len(X))
         ones_df = pd.DataFrame(ones_np_array, columns=["bias"])
         full_X = pd.concat([ones_df, X], axis=1)
         y_vec = y.values
-        return full_X, y_vec
+        full_X_mat = full_X.values
+        print(full_X_mat)
+        print(y_vec)
+        return full_X_mat, y_vec
 
 
     def fit(self,  X, y):
         # Функция с обучением
-
         random.seed(self.random_state)
+        X_mat, y_vec = self._prepare_data(X, y)
 
-        print(self.configuration_regularization[self.reg])
-        X_mat, y_vec = self._prepare_data
-        print(X_mat)
-        print(y_vec)
 
 
 
