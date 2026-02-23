@@ -8,7 +8,6 @@ class My_Line_Reg():
 
     def __init__(self, n_iter=100, learning_rate=0.001, weights=None, reg=None, l1_coef=0.0, l2_coef=0.0, sgd_sample=None, random_state=42):
         # Функция для инициализации
-
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
@@ -54,8 +53,12 @@ class My_Line_Reg():
         full_X = pd.concat([ones_df, X], axis=1)
         y_vec = y.values
         full_X_mat = full_X.values
-        print(full_X_mat)
-        print(y_vec)
+        self.weights = np.ones(len(full_X_mat[0]))
+        # print(full_X_mat)
+        # print(y_vec)
+        # print(len(full_X_mat[0]))
+        # print(len(X))
+
         return full_X_mat, y_vec
 
 
@@ -63,29 +66,28 @@ class My_Line_Reg():
         # Функция с обучением
         random.seed(self.random_state)
         X_mat, y_vec = self._prepare_data(X, y)
-
+        
 
 
 
 # [Псевдокод на естественном языке]
 
-# метод fit:
-#     → вызвать _initialize(X, y)
-#     → если verbose: вывести начальный loss
-#     → цикл обучения:
-#         → взять батч
-#         → посчитать градиент
-#         → обновить веса
-#         → если verbose и нужная итерация:
-#             → посчитать loss на полной выборке
-#             → вывести через _log
+# метод fit(X, y, verbose=False):
+#     → подготовить данные
+#     → инициализировать веса
+#     → нормализовать ключ регуляризации
+#     → получить конфигурацию
+#     → если verbose:
+#         → сделать прогноз на полных данных
+#         → вызвать _calculate_loss(прогноз, y, конфигурация)
+#         → вызвать _log("start", loss)
+#     → цикл обучения
 
-# метод _calculate_loss(X, y, weights):
+# метод _calculate_loss(y_pred, y_vec, config):
 #     → посчитать MSE
-#     → если L1: добавить штраф L1
-#     → если L2: добавить штраф L2
-#     → если ElasticNet: добавить оба штрафа
-#     → вернуть итоговое значение
+#     → посчитать штраф L1 через config.l1_coef
+#     → посчитать штраф L2 через config.l2_coef
+#     → вернуть сумму
 
 # метод _log(iteration, loss):
 #     → форматированный вывод
