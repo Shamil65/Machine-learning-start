@@ -59,7 +59,7 @@ class My_Line_Reg():
     
     def _log(self, iteration, loss):
         # Функция для логирование итераций
-        if iteration == 1:
+        if iteration == 0:
             print(f"start | loss: {loss}")
         else:
             print(f"iter {iteration} | loss: {loss}")
@@ -82,7 +82,7 @@ class My_Line_Reg():
         
         return X_batch, y_batch
 
-    def fit(self,  X, y):
+    def fit(self,  X, y, verbose=False):
         # Функция с обучением
         random.seed(self.random_state)
         X_mat, y_vec = self._prepare_data(X, y)
@@ -96,20 +96,29 @@ class My_Line_Reg():
         y_pred = X_mat @ self.weights
         
         
-        for i in range(1, self.n_iter + 1):
+        for i in range(0, self.n_iter + 1):
+
+            if verbose and i % verbose == 0:
+                y_pred_full_data = X_mat @ self.weights
+                loss_ = self._calculate_loss(y_pred_full_data, y_vec, config)
+                self._log(i, loss_)
+
+            if i == 0:
+                continue
+
             X_batch, y_batch = self._get_batch(X_mat, y_vec, self.sgd_sample)
 
             y_pred = X_batch @ self.weights
             errors = y_pred - y_batch
-
-            loss_ = self._calculate_loss(y_pred, y_batch, config)
-            self._log(i, loss_)
 
             m = X_batch.shape[0] 
             gradient = (2 / m) * (X_batch.T @ errors)
 
             regularized_gradient = gradient + config["l1_coef"] * np.sign(self.weights) + config["l2_coef"] * 2 * self.weights
             self.weights -= regularized_gradient * self.learning_rate
+
+            
+            
         
 
 
@@ -122,10 +131,10 @@ y = pd.Series([0, 1])
 X_test = pd.DataFrame({"x1": [3, 2],
                   "x2": [6, 4],
                   "x3": [9, 8]})
-
-MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2)
+verbose = 10
+MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2, n_iter=10000)
 print(MyLineReg1)
-MyLineReg1.fit(X, y)
+MyLineReg1.fit(X, y, verbose)
 
 
 # [Псевдокод на естественном языке]
