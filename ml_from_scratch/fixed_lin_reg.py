@@ -32,42 +32,68 @@ class My_Line_Reg():
                     "l2_coef": 0}
         }
 
+
     def __str__(self):
         # Функция с выводом информации о классе
         return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
     
 
-    def _calculate_loss(self, y_pred, y_vec):
+    def _calculate_loss(self, y_pred, y_vec, config):
         # Функция для рассчета loss
         MSE = np.mean((y_pred - y_vec)**2)
-        penalty_l1 = self.l1_coef * np.sum(np.abs(self.weights))
-        penalty_l2 = self.l2_coef * np.sum((self.weights)**2)
+        penalty_l1 = config["l1_coef"] * np.sum(np.abs(self.weights))
+        penalty_l2 = config["l2_coef"] * np.sum((self.weights)**2)
         loss = MSE + penalty_l1 + penalty_l2
         return loss
         
 
     def _prepare_data(self, X, y):
         # Функция для подготовки данных
-        ones_np_array = np.zeros(len(X))
-        ones_df = pd.DataFrame(ones_np_array, columns=["bias"])
+        ones_np_array = np.ones(len(X))
+        ones_df = pd.DataFrame(ones_np_array, columns=["bias"], index=X.index)
         full_X = pd.concat([ones_df, X], axis=1)
         y_vec = y.values
         full_X_mat = full_X.values
-        self.weights = np.ones(len(full_X_mat[0]))
-        # print(full_X_mat)
-        # print(y_vec)
-        # print(len(full_X_mat[0]))
-        # print(len(X))
-
         return full_X_mat, y_vec
+
+    
+    def _log(self, iteration, loss):
+        if iteration == 1:
+            print(f"start | loss: {loss}")
+        else:
+            print(f"iter {iteration} | loss: {loss}")
 
 
     def fit(self,  X, y):
         # Функция с обучением
         random.seed(self.random_state)
         X_mat, y_vec = self._prepare_data(X, y)
+        n_features = X_mat.shape[1]
+        self.weights = np.ones(n_features)
+        
+        # = reg если оно не равно None, иначе оно равно none
+        key = self.reg if self.reg is not None else "none"
+
+        config = self.configuration_regularization[key]
+        y_pred = X_mat @ self.weights
+        loss = self._calculate_loss(y_pred, y_vec, config)
+        print(loss)
         
 
+
+
+X = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+y = pd.Series([0, 1])
+
+X_test = pd.DataFrame({"x1": [3, 2],
+                  "x2": [6, 4],
+                  "x3": [9, 8]})
+
+MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2)
+print(MyLineReg1)
+MyLineReg1.fit(X, y)
 
 
 # [Псевдокод на естественном языке]
