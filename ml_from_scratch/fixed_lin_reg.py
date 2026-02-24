@@ -136,17 +136,3 @@ class My_Line_Reg():
         total_sum_of_squares = np.sum((y_vec - np.mean(y_vec))**2) 
 
         return 1 - (residual_sum_of_squares/total_sum_of_squares)
-
-
-# X = pd.DataFrame({"x1": [3, 2],
-#                   "x2": [6, 4],
-#                   "x3": [9, 8]})
-# y = pd.Series([0, 1])
-
-# X_test = pd.DataFrame({"x1": [3, 2],
-#                   "x2": [6, 4],
-#                   "x3": [9, 8]})
-# verbose = 1000
-# MyLineReg1 = My_Line_Reg(l2_coef=2, n_iter=10000)
-# print(MyLineReg1)
-# MyLineReg1.fit(X, y, verbose)
