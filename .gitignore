@@ -6,3 +6,8 @@
 *.egg
 dist/
 build/
+
+# Python артефакты
+__pycache__/
+*.py[cod]
+*$py.class
