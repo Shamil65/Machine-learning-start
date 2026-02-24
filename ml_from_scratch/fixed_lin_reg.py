@@ -81,6 +81,7 @@ class My_Line_Reg():
         y_batch = y[sample_rows_idx]
         
         return X_batch, y_batch
+    
 
     def fit(self,  X, y, verbose=False):
         # Функция с обучением
@@ -119,11 +120,16 @@ class My_Line_Reg():
 
             regularized_gradient = gradient + config["l1_coef"] * np.sign(self.weights) + config["l2_coef"] * 2 * self.weights
             self.weights -= regularized_gradient * self.learning_rate
-
-            
-            
         
+        y_pred_final = X_mat @ self.weights
+        print(self._r2(y_vec, y_pred_final))
 
+            
+    def _r2(self, y_vec, y_pred):
+        residual_sum_of_squares = np.sum((y_vec - y_pred)**2) 
+        total_sum_of_squares = np.sum((y_vec - np.mean(y_vec))**2) 
+
+        return 1 - (residual_sum_of_squares/total_sum_of_squares)
 
 
 X = pd.DataFrame({"x1": [3, 2],
@@ -134,7 +140,7 @@ y = pd.Series([0, 1])
 X_test = pd.DataFrame({"x1": [3, 2],
                   "x2": [6, 4],
                   "x3": [9, 8]})
-verbose = 10
+verbose = 1000
 MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2, n_iter=10000)
 print(MyLineReg1)
 MyLineReg1.fit(X, y, verbose)
