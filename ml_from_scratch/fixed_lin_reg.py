@@ -122,7 +122,7 @@ class My_Line_Reg():
             self.weights -= regularized_gradient * self.learning_rate
         
         y_pred_final = X_mat @ self.weights
-        print(self._r2(y_vec, y_pred_final))
+        print(f"R² на обучении: {self._r2(y_vec, y_pred_final):.3f}")
 
             
     def _r2(self, y_vec, y_pred):
@@ -141,6 +141,6 @@ X_test = pd.DataFrame({"x1": [3, 2],
                   "x2": [6, 4],
                   "x3": [9, 8]})
 verbose = 1000
-MyLineReg1 = My_Line_Reg(reg="elasticnet", l2_coef=2, n_iter=10000)
+MyLineReg1 = My_Line_Reg(l2_coef=2, n_iter=10000)
 print(MyLineReg1)
 MyLineReg1.fit(X, y, verbose)
