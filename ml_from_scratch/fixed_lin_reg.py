@@ -96,7 +96,8 @@ class My_Line_Reg():
         config = self.configuration_regularization[key]
         y_pred = X_mat @ self.weights
         
-        
+        is_lr_callable = callable(self.learning_rate)
+
         for i in range(0, self.n_iter + 1):
             # цикл с обучением
 
@@ -118,8 +119,13 @@ class My_Line_Reg():
             m = X_batch.shape[0] 
             gradient = (2 / m) * (X_batch.T @ errors)
 
+            if is_lr_callable:
+                self.learning_rate_iter = self.learning_rate(i)
+            else:
+                self.learning_rate_iter = self.learning_rate
+
             regularized_gradient = gradient + config["l1_coef"] * np.sign(self.weights) + config["l2_coef"] * 2 * self.weights
-            self.weights -= regularized_gradient * self.learning_rate
+            self.weights -= regularized_gradient * self.learning_rate_iter
         
         y_pred_final = X_mat @ self.weights
         print(f"R² на обучении: {self._r2(y_vec, y_pred_final):.3f}")
@@ -132,15 +138,15 @@ class My_Line_Reg():
         return 1 - (residual_sum_of_squares/total_sum_of_squares)
 
 
-X = pd.DataFrame({"x1": [3, 2],
-                  "x2": [6, 4],
-                  "x3": [9, 8]})
-y = pd.Series([0, 1])
+# X = pd.DataFrame({"x1": [3, 2],
+#                   "x2": [6, 4],
+#                   "x3": [9, 8]})
+# y = pd.Series([0, 1])
 
-X_test = pd.DataFrame({"x1": [3, 2],
-                  "x2": [6, 4],
-                  "x3": [9, 8]})
-verbose = 1000
-MyLineReg1 = My_Line_Reg(l2_coef=2, n_iter=10000)
-print(MyLineReg1)
-MyLineReg1.fit(X, y, verbose)
+# X_test = pd.DataFrame({"x1": [3, 2],
+#                   "x2": [6, 4],
+#                   "x3": [9, 8]})
+# verbose = 1000
+# MyLineReg1 = My_Line_Reg(l2_coef=2, n_iter=10000)
+# print(MyLineReg1)
+# MyLineReg1.fit(X, y, verbose)
