@@ -127,12 +127,14 @@ class My_Line_Reg():
             regularized_gradient = gradient + config["l1_coef"] * np.sign(self.weights) + config["l2_coef"] * 2 * self.weights
             self.weights -= regularized_gradient * self.learning_rate_iter
         
-        y_pred_final = X_mat @ self.weights
-        print(f"R² на обучении: {self._r2(y_vec, y_pred_final):.3f}")
+        # y_pred_final = X_mat @ self.weights
+        print(f"R² на обучении: {self._r2(X, y):.3f}")
 
             
-    def _r2(self, y_vec, y_pred):
-        residual_sum_of_squares = np.sum((y_vec - y_pred)**2) 
+    def _r2(self, X, y):
+        X_mat, y_vec = self._prepare_data(X, y)
+        y_pred_final = X_mat @ self.weights
+        residual_sum_of_squares = np.sum((y_vec - y_pred_final)**2) 
         total_sum_of_squares = np.sum((y_vec - np.mean(y_vec))**2) 
 
         return 1 - (residual_sum_of_squares/total_sum_of_squares)
