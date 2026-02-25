@@ -136,5 +136,6 @@ class My_Line_Reg():
         y_pred_final = X_mat @ self.weights
         residual_sum_of_squares = np.sum((y_vec - y_pred_final)**2) 
         total_sum_of_squares = np.sum((y_vec - np.mean(y_vec))**2) 
-
-        return 1 - (residual_sum_of_squares/total_sum_of_squares)
+        
+        r2_ = 1 - (residual_sum_of_squares/total_sum_of_squares)
+        return r2_
