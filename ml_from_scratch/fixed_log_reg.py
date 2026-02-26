@@ -30,6 +30,7 @@ class MyLogReg():
     
 
     def _prepare_data(self, X, y):
+        # Функция для подготовки данных
         ones_np_array = np.ones(len(X))
         ones_df = pd.DataFrame(ones_np_array, columns=["bias"], index=X.index)
         full_X = pd.concat([ones_df, X], axis=1)
@@ -38,7 +39,8 @@ class MyLogReg():
         return full_X_mat, y_vec
     
 
-    def _log(i, loss):
+    def _log(self, i, loss):
+        # Функция для вывода информации
         if i == 0:
             print(f"start | loss: {loss:.2f}")
         else:
@@ -51,13 +53,6 @@ class MyLogReg():
         m_instances, n_features = X_mat.shape
         self.weights = np.ones(n_features)
 
-        y_pred = X_mat @ self.weights
-
-        loss = self._calculate_loss(X_mat, y_vec, self.weights)
-
-        if verbose:
-            print(f"start | loss: {loss:.2f}")
-
         for i in range(0, self.n_iter + 1):
             
             if verbose and i % verbose == 0:
@@ -67,43 +62,36 @@ class MyLogReg():
             if i == 0:
                 continue
 
-            y_pred = self.sigmooid(X_mat @ self.weights)
-
+            y_pred = self.sigmoid(X_mat @ self.weights)
             gradient = (X_mat.T @ (y_pred - y_vec))/m_instances
-
             self.weights -= self.learning_rate * gradient
             
-            if verbose and i % verbose == 0:
-                current_loss = self.loss_function(X_mat, y_vec, self.weights)
-                print(f"{i} | loss: {current_loss:.2f}")
 
     def get_coef(self):
+        # Функция для вывода коэффициентов
         return self.weights[1:]
     
     def predict(self, X):
+        # predict – переводит вероятности в бинарные классы по порогу > 0.5
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
         X_math = X_with_bias.values
 
-        y_pred = self.sigmooid(X_math @ self.weights)
+        y_pred = self.sigmoid(X_math @ self.weights)
         y_pred_bin = y_pred > 0.5
         return y_pred_bin
 
 
     def predict_proba(self, X):
+        # predict_proba – возвращает вероятности (логиты прогнанные через функцию сигмоиды)
         X_with_bias = X.copy()
         X_with_bias.insert(0, "bias", 1)
         X_math = X_with_bias.values
 
-        y_pred = self.sigmooid(X_math @ self.weights)
+        y_pred = self.sigmoid(X_math @ self.weights)
 
         return y_pred
         
-
-
-
-            # y_pred = X_with_bias @ self.weights
-            # Log_loss = (-1/n) * np.sum(y_vec*np.log(y_pred) + (1+y_vec)*np.log(1-y_pred))
 
 
 
