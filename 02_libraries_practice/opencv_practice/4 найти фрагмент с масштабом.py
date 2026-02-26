@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def ncc(img, templ):
+def ncc(img, templ): 
     h, w = templ.shape
     rows, cols = img.shape[0] - h + 1, img.shape[1] - w + 1
     res = np.zeros((rows, cols))
