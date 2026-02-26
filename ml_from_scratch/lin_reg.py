@@ -38,8 +38,9 @@ class My_Line_Reg():
         return "MyLineReg class: n_iter={}, learning_rate={}".format(self.n_iter, self.learning_rate)
     
 
-    def _calculate_loss(self, y_pred, y_vec, config):
+    def _calculate_loss(self, X_mat, y_vec, weights, config):
         # Функция для рассчета loss
+        y_pred = X_mat @ weights
         MSE = np.mean((y_pred - y_vec)**2)
         penalty_l1 = config["l1_coef"] * np.sum(np.abs(self.weights))
         penalty_l2 = config["l2_coef"] * np.sum((self.weights)**2)
@@ -102,8 +103,7 @@ class My_Line_Reg():
             # цикл с обучением
 
             if verbose and i % verbose == 0:
-                y_pred_full_data = X_mat @ self.weights
-                loss_ = self._calculate_loss(y_pred_full_data, y_vec, config)
+                loss_ = self._calculate_loss(X_mat, y_vec, self.weights, config)
                 self._log(i, loss_)
 
             # специально добавили один цикл для вывод старт start
