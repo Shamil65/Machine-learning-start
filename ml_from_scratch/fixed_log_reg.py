@@ -47,6 +47,25 @@ class MyLogReg():
             print(f"{i} | loss: {loss:.2f}")
 
 
+    def accuracy(self, X, y, weights):
+        #   True Positive (TP) – количество положительных классов, которые правильно определены как положительные.
+        # Пример: письмо является спамом, и классификатор правильно отнес его к спаму.
+        #   False Negative (FN) – количество положительных классов, которые неправильно определены как отрицательные.
+        # Пример: письмо является спамом, но классификатор ошибочно определил его как не спам.
+        #   False positive (FP) – количество отрицательных классов, которые неправильно определены как положительные.
+        # Пример: письмо не является спамом, однако классификатор отнес его к спаму.
+        #   True Negative (TN) – количество отрицательных классов, которые правильно определены как отрицательные.
+        # Пример: письмо не является спамом, и классификатор правильно не забраковал его.
+        # accuracy = (TP + TN) / (TP + FN + FP + TN)
+        
+        y_pred = self.sigmoid(X @ self.weights)
+        print(y_pred)
+        acc = np.mean(y_pred == y)
+
+        return acc
+
+
+
     def fit(self, X, y, verbose=False):
         # Функция для обучения модели
         X_mat, y_vec = self._prepare_data(X, y)
@@ -65,6 +84,8 @@ class MyLogReg():
             y_pred = self.sigmoid(X_mat @ self.weights)
             gradient = (X_mat.T @ (y_pred - y_vec))/m_instances
             self.weights -= self.learning_rate * gradient
+
+        print(self.accuracy(X_mat, y_vec, self.weights))
             
 
     def get_coef(self):
@@ -91,7 +112,7 @@ class MyLogReg():
         y_pred = self.sigmoid(X_math @ self.weights)
 
         return y_pred
-
+    
 
 
 
