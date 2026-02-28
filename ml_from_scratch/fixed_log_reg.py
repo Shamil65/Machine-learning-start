@@ -62,6 +62,22 @@ class MyLogReg():
         acc = np.mean(y_pred == y)
 
         return acc
+    
+
+    def precision():
+        pass
+
+
+    def recall():
+        pass
+
+
+    def f1():
+        pass
+
+
+    def roc_auc():
+        pass
 
 
     def fit(self, X, y, verbose=False):
