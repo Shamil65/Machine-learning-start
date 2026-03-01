@@ -48,36 +48,62 @@ class MyLogReg():
 
 
     def accuracy(self, X, y, weights):
-        #   True Positive (TP) – количество положительных классов, которые правильно определены как положительные.
-        # Пример: письмо является спамом, и классификатор правильно отнес его к спаму.
-        #   False Negative (FN) – количество положительных классов, которые неправильно определены как отрицательные.
-        # Пример: письмо является спамом, но классификатор ошибочно определил его как не спам.
-        #   False positive (FP) – количество отрицательных классов, которые неправильно определены как положительные.
-        # Пример: письмо не является спамом, однако классификатор отнес его к спаму.
-        #   True Negative (TN) – количество отрицательных классов, которые правильно определены как отрицательные.
-        # Пример: письмо не является спамом, и классификатор правильно не забраковал его.
-        # accuracy = (TP + TN) / (TP + FN + FP + TN)
-        
-        y_pred = self.sigmoid(X @ self.weights)
-        acc = np.mean(y_pred == y)
-
-        return acc
+        y_pred = (self.sigmoid(X @ self.weights) > 0.5).astype(int)
+        return np.mean(y_pred == y)
     
 
-    def precision():
-        pass
+    def precision(self, X, y):
+        y_pred = (self.sigmoid(X @ self.weights) > 0.5).astype(int)
+
+        TP = np.sum((y_pred == 1) & (y == 1))
+        FP = np.sum((y_pred == 1) & (y == 0))
+
+        return TP / (TP + FP + 1e-15)
 
 
-    def recall():
-        pass
+    def recall(self, X, y):
+        y_pred = (self.sigmoid(X @ self.weights) > 0.5).astype(int)
+
+        TP = np.sum((y_pred == 1) & (y == 1))
+        FN = np.sum((y_pred == 0) & (y == 1))
+
+        return TP / (TP + FN + 1e-15)
 
 
-    def f1():
-        pass
+    def f1(self, X, y):
+        p = self.precision(X, y)
+        r = self.recall(X, y)
+
+        return 2 * p * r / (p + r + 1e-15)
 
 
-    def roc_auc():
-        pass
+    def roc_auc(self, X, y):
+        # X — матрица с bias, y — метки классов (0/1)
+        y_score = self.sigmoid(X @ self.weights)  # предсказанные вероятности
+        q = len(y)
+        
+        P = np.sum(y == 1)  # число положительных
+        N = np.sum(y == 0)  # число отрицательных
+        
+        auc_sum = 0.0
+        
+        for i in range(q):
+            for j in range(q):
+                # Проверка y_i < y_j
+                I_y = 1 if y[i] < y[j] else 0
+                
+                # Проверка a_i < a_j
+                if y_score[i] < y_score[j]:
+                    I_a = 1
+                elif y_score[i] == y_score[j]:
+                    I_a = 0.5
+                else:
+                    I_a = 0
+                
+                auc_sum += I_y * I_a
+        
+        auc = auc_sum / (P * N + 1e-15)  # делим на P*N для нормализации
+        return auc
 
 
     def fit(self, X, y, verbose=False):
