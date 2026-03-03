@@ -1,4 +1,4 @@
-def dichotomy_method(func, a, b, eps=1e-6, delta=1e-6, max_iter=1000):
+def dichotomy_method(func, a, b, eps=1e-6, delta=1e-6, max_iter=50):
 
     for i in range(max_iter):
         x1 = (a + b)/2 - delta
@@ -19,7 +19,6 @@ def dichotomy_method(func, a, b, eps=1e-6, delta=1e-6, max_iter=1000):
     print("Достигнуто максимальное число итераций")
     return (a + b)/2
 
-# --- ввод от пользователя ---
 import math
 
 func_str = input("Введите функцию f(x), например, (x**4 - 18*x**2 + 6)**2: ")

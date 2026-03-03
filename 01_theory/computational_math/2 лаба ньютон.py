@@ -1,9 +1,6 @@
-# Метод ньютона
-
-
 import sympy as sp
 
-def newton_method(func_str, x0, eps=1e-6, max_iter=100):
+def newton_method(func_str, x0, eps=1e-6, max_iter=50):
 
     x = sp.symbols('x')
     f_sym = sp.sympify(func_str)
