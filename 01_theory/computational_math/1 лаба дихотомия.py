@@ -7,6 +7,7 @@ def dichotomy_method(func, a, b, eps=1e-6, delta=1e-6, max_iter=50):
         f1 = func(x1)
         f2 = func(x2)
         
+
         if f1 < f2:
             b = x2
         else:
@@ -28,5 +29,6 @@ b = float(input("Введите правую границу интервала b
 func = eval(f"lambda x: {func_str}")
 
 root = dichotomy_method(func, a, b)
-print(f"Приближённый корень/минимум: {root:.6f}")
+print(f"Приближённый минимум: {root:.6f}")
 print(f"f(root) ≈ {func(root):.6e}")
+
