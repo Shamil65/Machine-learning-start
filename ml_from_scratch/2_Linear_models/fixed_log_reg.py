@@ -97,3 +97,7 @@ class MyLogReg():
         y_pred = self.sigmoid(X_math @ self.weights)
 
         return y_pred
+    
+
+
+
