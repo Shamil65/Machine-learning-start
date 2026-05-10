@@ -1,41 +1,33 @@
 # ML Study
 
-Учебный репозиторий по Machine Learning с теорией, практикой библиотек, реализацией алгоритмов и проектами Kaggle.
+Реализация алгоритмов ML с нуля и практика на реальных данных.
+Цель — подготовка к стажировке в Machine Learning.
 
----
+## Структура
 
-## 📁 Структура
+ml_from_scratch/   — алгоритмы реализованные вручную без sklearn
+kaggle/            — проекты на реальных датасетах
 
-```
+## Реализовано с нуля
 
-01_theory/               — Теория и вычислительная математика
-02_libraries_practice/   — Практика с Python-библиотеками (NumPy, pandas, Pillow)
-03_ml_from_scratch/      — Реализация алгоритмов ML с нуля
-04_kaggle/               — Проекты Kaggle
+- Линейная регрессия (SGD, L1/L2/ElasticNet, mini-batch)
+- (добавляй по мере реализации)
 
-```
+## Kaggle проекты
 
----
+- **Diabetes** — предсказание прогрессирования диабета,
+  линейная регрессия, R² = 0.XX
+- **Breast Cancer** — классификация опухолей,
+  логистическая регрессия, accuracy = 0.XX
 
-## 🧠 Проекты Kaggle
+## Стек
 
-- **diabetes** — линейная регрессия на данных диабета  
-- **breast_cancer** — логистическая регрессия на данных по раку молочной железы  
+Python, NumPy, pandas, Scikit-learn, Jupyter
 
----
+## Установка
 
-## 🚀 Используемое
+pip install -r requirements.txt
 
-- Python 3.x, Jupyter Notebook  
-- NumPy, pandas, Pillow, Scikit-learn
+## Контакты
 
----
-
-## 👨‍💻 Контакты
-
-- GitHub: [Shamil65](https://github.com/Shamil65)  
-- Telegram: [t.me/shamil3310](https://t.me/shamil3310)
-
-## Использование
-
--   pip install -r requirements.txt
+Telegram: @shamil3310
