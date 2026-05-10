@@ -42,5 +42,5 @@ pip install -r requirements.txt
 
 ## Контакты
 
-Telegram: @shamil3310
+Telegram: [t.me/shamil3310](https://t.me/shamil3310)
 
