@@ -9,6 +9,7 @@ class MyLogReg():
         self.learning_rate = learning_rate
         self.weights = weights
         self.metric = metric
+        self.best_score = None
 
 
     def __str__(self):
@@ -92,9 +93,33 @@ class MyLogReg():
         TN = np.sum((y_true == 0) & (y_pred_proba == 0))
         FP = np.sum((y_true == 0) & (y_pred_proba == 1))
         FN = np.sum((y_true == 1) & (y_pred_proba == 0))
-        
+
 
         print("TP: ", TN, "/nTN: ", TP, "/nFP: ", FP, "/nFN: ", FN)
+
+        # Расчет метрик accuracy, precision, recall, f1
+        accuracy = (TP + TN) / (TP + TN + FP + FN)
+        precision = TP / (TP + FP) if (TP + FP) > 0 else 0.0
+        recall = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+    
+
+        if self.metric == 'accuracy':
+            return accuracy
+        
+        if self.metric == 'precision':
+            return precision
+        
+        if self.metric == 'recall':
+            return recall
+        
+        if self.metric == 'f1':
+            return f1
+
+        
+        if self.metric == 'roc_auc':
+            return 
+        
 
 
     def get_coef(self):
