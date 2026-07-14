@@ -4,10 +4,11 @@ import numpy as np
 
 class MyLogReg():
     # Класс для реализации логистической регрессии
-    def __init__(self, n_iter=10, learning_rate=0.1, weights=None):
+    def __init__(self, n_iter=10, learning_rate=0.1, weights=None, metric=None):
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
+        self.metric = metric
 
 
     def __str__(self):
@@ -47,15 +48,12 @@ class MyLogReg():
             print(f"{i} | loss: {loss:.2f}")
 
 
-    def accuracy():
-        pass
-
-
     def fit(self, X, y, verbose=False):
         # Функция для обучения модели
         X_mat, y_vec = self._prepare_data(X, y)
         m_instances, n_features = X_mat.shape
         self.weights = np.ones(n_features)
+        y_true = y_vec
 
         for i in range(0, self.n_iter + 1):
             
@@ -70,8 +68,33 @@ class MyLogReg():
             gradient = (X_mat.T @ (y_pred - y_vec))/m_instances
             self.weights -= self.learning_rate * gradient
 
-        print(self.accuracy(X_mat, y_vec, self.weights))
-            
+        
+    def _calculate_metric(self, y_true, y_pred_proba):
+        # Если метрика не задана — выходим
+        if self.metric == None:
+            return
+        
+
+        # y_true = [0, 1, 0, 0, 1, 0, 1, 1, 0]  
+        # y_pred = [0, 0, 0, 0, 1, 0, 1, 1, 0]
+        # 
+        # TP (True Positive) – истинно положительные примеры;
+        # TN (True Negative) – истинно отрицательные примеры;
+        # FP (False Positive) – ложноположительные примеры;
+        # FN (False Negative) – ложноотрицательные примеры.
+        # 
+        # TP - 3 | FP - 0
+        # FN - 1 | TN - 5
+
+
+        # Получаем бинарные предсказания по порогу 0.5
+        TP = np.sum((y_true == 1) & (y_pred_proba == 1))
+        TN = np.sum((y_true == 0) & (y_pred_proba == 0))
+        FP = np.sum((y_true == 0) & (y_pred_proba == 1))
+        FN = np.sum((y_true == 1) & (y_pred_proba == 0))
+
+        print("TP: ", TN, "/nTN: ", TP, "/nFP: ", FP, "/nFN: ", FN)
+
 
     def get_coef(self):
         # Функция для вывода коэффициентов
@@ -97,7 +120,3 @@ class MyLogReg():
         y_pred = self.sigmoid(X_math @ self.weights)
 
         return y_pred
-    
-
-
-
