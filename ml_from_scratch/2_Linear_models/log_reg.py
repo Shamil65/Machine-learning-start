@@ -92,6 +92,7 @@ class MyLogReg():
         TN = np.sum((y_true == 0) & (y_pred_proba == 0))
         FP = np.sum((y_true == 0) & (y_pred_proba == 1))
         FN = np.sum((y_true == 1) & (y_pred_proba == 0))
+        
 
         print("TP: ", TN, "/nTN: ", TP, "/nFP: ", FP, "/nFN: ", FN)
 
