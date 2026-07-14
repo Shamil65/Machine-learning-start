@@ -89,10 +89,12 @@ class MyLogReg():
 
 
         # Получаем бинарные предсказания по порогу 0.5
-        TP = np.sum((y_true == 1) & (y_pred_proba == 1))
-        TN = np.sum((y_true == 0) & (y_pred_proba == 0))
-        FP = np.sum((y_true == 0) & (y_pred_proba == 1))
-        FN = np.sum((y_true == 1) & (y_pred_proba == 0))
+        y_pred_bin = y_pred_proba > 0.5
+
+        TP = np.sum((y_true == 1) & (y_pred_bin == 1))
+        TN = np.sum((y_true == 0) & (y_pred_bin == 0))
+        FP = np.sum((y_true == 0) & (y_pred_bin == 1))
+        FN = np.sum((y_true == 1) & (y_pred_bin == 0))
 
 
         print("TP: ", TN, "/nTN: ", TP, "/nFP: ", FP, "/nFN: ", FN)
@@ -116,9 +118,36 @@ class MyLogReg():
         if self.metric == 'f1':
             return f1
 
-        
         if self.metric == 'roc_auc':
-            return 
+            y_score_rounded = np.round(y_pred_proba, 10)
+            roc_auc_value = self._calculate_roc_auc(y_true, y_score_rounded)
+            return roc_auc_value
+
+        if self.metric == None:
+            return None
+        
+
+    def _calculate_roc_auc(self, y_true, y_score_rounded):
+
+        P = np.sum(y_true == 1)
+        N = np.sum(y_true == 0)
+
+        if N == 0 & P == 0:
+            return 0
+        total_sum = 0
+        
+        for i in range(len(y_true)):
+            for j in range(len(y_true)):
+                if y_true[i] == 0 & y_true[j] == 1:
+
+                    if y_score_rounded[i] < y_score_rounded[j]:
+                        total_sum += 1.0
+                    if y_score_rounded[i] == y_score_rounded[j]:
+                        total_sum += 0.5
+                    # else: скор отриц > скор полож — ничего не добавляем
+        
+        roc_auc = total_sum / (N * P)
+        return roc_auc
         
 
 
