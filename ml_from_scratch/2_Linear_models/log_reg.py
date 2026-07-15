@@ -41,39 +41,72 @@ class MyLogReg():
         return full_X_mat, y_vec
     
 
-    def _log(self, i, loss):
-        # Функция для вывода информации
+    def _log(self, i, loss, metric_value=None):
         if i == 0:
-            print(f"start | loss: {loss:.2f}")
+            prefix = "start"
         else:
-            print(f"{i} | loss: {loss:.2f}")
+            prefix = str(i)
+        
+        output = f"{prefix} | loss: {loss:.2f}"
+        
+        if metric_value is not None:
+            output += f" | {self.metric}: {metric_value:.2f}"
+        
+        print(output)
 
 
     def fit(self, X, y, verbose=False):
-        # Функция для обучения модели
         X_mat, y_vec = self._prepare_data(X, y)
         m_instances, n_features = X_mat.shape
         self.weights = np.ones(n_features)
-        y_true = y_vec
 
         for i in range(0, self.n_iter + 1):
-            
+            y_pred = self.sigmoid(X_mat @ self.weights)
+
+            # Логируем и считаем метрику ТОЛЬКО на verbose-шагах
             if verbose and i % verbose == 0:
                 loss = self._calculate_loss(X_mat, y_vec, self.weights)
-                self._log(i, loss)
-                
+                metric_value = self._calculate_metric(y_vec, y_pred)
+                self._log(i, loss, metric_value)
+
             if i == 0:
                 continue
 
-            y_pred = self.sigmoid(X_mat @ self.weights)
-            gradient = (X_mat.T @ (y_pred - y_vec))/m_instances
+            gradient = (X_mat.T @ (y_pred - y_vec)) / m_instances
             self.weights -= self.learning_rate * gradient
+
+        # Метрика обученной (финальной) модели — считаем ОДИН раз
+        final_pred = self.sigmoid(X_mat @ self.weights)
+        self.best_score = self._calculate_metric(y_vec, final_pred)
+
+
+    def _calculate_roc_auc(self, y_true, y_score_rounded):
+        P = np.sum(y_true == 1)
+        N = np.sum(y_true == 0)
+        if P == 0 or N == 0:
+            return 0
+
+        # Средние ранги (обработка одинаковых скоров как в парной формуле с 0.5)
+        order = np.argsort(y_score_rounded, kind='mergesort')
+        s = y_score_rounded[order]
+        n = len(y_score_rounded)
+        ranks = np.empty(n, dtype=float)
+        i = 0
+        while i < n:
+            j = i
+            while j < n and s[j] == s[i]:
+                j += 1
+            ranks[order[i:j]] = (i + j + 1) / 2.0  # средний ранг (1-based)
+            i = j
+
+        roc_auc = (np.sum(ranks[y_true == 1]) - P * (P + 1) / 2.0) / (P * N)
+        return roc_auc
 
         
     def _calculate_metric(self, y_true, y_pred_proba):
         # Если метрика не задана — выходим
         if self.metric == None:
-            return
+            return None
         
 
         # y_true = [0, 1, 0, 0, 1, 0, 1, 1, 0]  
@@ -97,7 +130,7 @@ class MyLogReg():
         FN = np.sum((y_true == 1) & (y_pred_bin == 0))
 
 
-        print("TP: ", TN, "/nTN: ", TP, "/nFP: ", FP, "/nFN: ", FN)
+        # print(f"TP: {TP}\nTN: {TN}\nFP: {FP}\nFN: {FN}")
 
         # Расчет метрик accuracy, precision, recall, f1
         accuracy = (TP + TN) / (TP + TN + FP + FN)
@@ -122,33 +155,10 @@ class MyLogReg():
             y_score_rounded = np.round(y_pred_proba, 10)
             roc_auc_value = self._calculate_roc_auc(y_true, y_score_rounded)
             return roc_auc_value
-
-        if self.metric == None:
-            return None
         
 
-    def _calculate_roc_auc(self, y_true, y_score_rounded):
-
-        P = np.sum(y_true == 1)
-        N = np.sum(y_true == 0)
-
-        if N == 0 & P == 0:
-            return 0
-        total_sum = 0
-        
-        for i in range(len(y_true)):
-            for j in range(len(y_true)):
-                if y_true[i] == 0 & y_true[j] == 1:
-
-                    if y_score_rounded[i] < y_score_rounded[j]:
-                        total_sum += 1.0
-                    if y_score_rounded[i] == y_score_rounded[j]:
-                        total_sum += 0.5
-                    # else: скор отриц > скор полож — ничего не добавляем
-        
-        roc_auc = total_sum / (N * P)
-        return roc_auc
-        
+    def get_best_score(self):
+        return self.best_score
 
 
     def get_coef(self):
@@ -175,3 +185,23 @@ class MyLogReg():
         y_pred = self.sigmoid(X_math @ self.weights)
 
         return y_pred
+    
+
+
+
+import pandas as pd
+import numpy as np
+
+# Создаём простой датасет
+df = pd.DataFrame({
+    'feature1': [1, 2, 3, 4, 5, 6, 7, 8],
+    'feature2': [0, 1, 0, 1, 0, 1, 0, 1],
+    'target':   [0, 0, 0, 0, 1, 1, 1, 1]
+})
+
+X = df[['feature1', 'feature2']]
+y = df['target']
+
+model = MyLogReg(n_iter=100, learning_rate=0.1, metric='accuracy')
+model.fit(X, y, verbose=10)
+print("Best score:", model.get_best_score())
