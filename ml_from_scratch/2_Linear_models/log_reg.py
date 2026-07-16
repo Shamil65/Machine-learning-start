@@ -4,12 +4,15 @@ import numpy as np
 
 class MyLogReg():
     # Класс для реализации логистической регрессии
-    def __init__(self, n_iter=10, learning_rate=0.1, weights=None, metric=None):
+    def __init__(self, n_iter=10, learning_rate=0.1, weights=None, metric=None, reg=None, l1_coef=0.0, l2_coef=0.0):
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
         self.metric = metric
         self.best_score = None
+        self.l1_coef = l1_coef
+        self.l2_coef = l2_coef
+        self.reg = reg
 
 
     def __str__(self):
@@ -22,13 +25,16 @@ class MyLogReg():
         return 1.0 / (1.0 + np.exp(-z))
     
     
-    def _calculate_loss(self, X, y, weights):
-        # Функция для расчета функции потерь
-        m = len(y)
+    def _calculate_loss(self, X_mat, y_vec, weights, l1, l2):
+        m = len(y_vec)
         eps = 1e-15
-        y_pred = self.sigmoid(X @ weights)
-        loss = (-1/m) * np.sum(y * np.log(y_pred + eps) + (1 - y) * np.log(1 - y_pred + eps))
-        return loss
+        y_pred = self.sigmoid(X_mat @ weights)
+        
+        penalty_l1 = l1 * np.sum(np.abs(weights))
+        penalty_l2 = l2 * np.sum(weights ** 2)
+        
+        LogLoss = (-1/m) * np.sum(y_vec * np.log(y_pred + eps) + (1 - y_vec) * np.log(1 - y_pred + eps))
+        return LogLoss + penalty_l1 + penalty_l2
     
 
     def _prepare_data(self, X, y):
@@ -60,24 +66,32 @@ class MyLogReg():
         m_instances, n_features = X_mat.shape
         self.weights = np.ones(n_features)
 
-        for i in range(0, self.n_iter + 1):
+        l1 = self.l1_coef if self.reg in ['l1', 'elasticnet'] else 0.0
+        l2 = self.l2_coef if self.reg in ['l2', 'elasticnet'] else 0.0
+
+        for i in range(self.n_iter):
             y_pred = self.sigmoid(X_mat @ self.weights)
 
             # Логируем и считаем метрику ТОЛЬКО на verbose-шагах
             if verbose and i % verbose == 0:
-                loss = self._calculate_loss(X_mat, y_vec, self.weights)
+                loss = self._calculate_loss(X_mat, y_vec, self.weights, l1, l2)
                 metric_value = self._calculate_metric(y_vec, y_pred)
                 self._log(i, loss, metric_value)
 
-            if i == 0:
-                continue
-
             gradient = (X_mat.T @ (y_pred - y_vec)) / m_instances
-            self.weights -= self.learning_rate * gradient
+
+            reg_gradient = gradient + l1 * np.sign(self.weights) + l2 * 2 * self.weights
+            self.weights -= self.learning_rate * reg_gradient
+
+
 
         # Метрика обученной (финальной) модели — считаем ОДИН раз
         final_pred = self.sigmoid(X_mat @ self.weights)
-        self.best_score = self._calculate_metric(y_vec, final_pred)
+
+        final_metric = self._calculate_metric(y_vec, final_pred)
+        if final_metric is not None:
+            if self.best_score is None or final_metric > self.best_score:
+                self.best_score = final_metric
 
 
     def _calculate_roc_auc(self, y_true, y_score_rounded):
