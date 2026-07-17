@@ -1,10 +1,19 @@
 import pandas as pd
 import numpy as np
+import random
 
 
 class MyLogReg():
     # Класс для реализации логистической регрессии
-    def __init__(self, n_iter=10, learning_rate=0.1, weights=None, metric=None, reg=None, l1_coef=0.0, l2_coef=0.0):
+    def __init__(self, n_iter=10, 
+                 learning_rate=0.1, 
+                 weights=None, 
+                 metric=None, reg=None, 
+                 l1_coef=0.0, 
+                 l2_coef=0.0, 
+                 sgd_sample=None, 
+                 random_state=42):
+        
         self.n_iter = n_iter
         self.learning_rate = learning_rate
         self.weights = weights
@@ -13,6 +22,8 @@ class MyLogReg():
         self.l1_coef = l1_coef
         self.l2_coef = l2_coef
         self.reg = reg
+        self.sgd_sample = sgd_sample
+        self.random_state  = random_state
 
 
     def __str__(self):
@@ -61,7 +72,28 @@ class MyLogReg():
         print(output)
 
 
+    def _get_batch(self, X, y, sgd_sample):
+        # Функция для разделения данных для стахостического градиентного спуска
+        n_count = X.shape[0]
+
+        if type(sgd_sample) == int:
+            batch_size = sgd_sample
+        elif type(sgd_sample) == float:
+            batch_size = round(sgd_sample * n_count)
+        else:
+            batch_size = n_count
+        
+        sample_rows_idx = random.sample(range(n_count), batch_size)
+        X_batch = X[sample_rows_idx]
+        y_batch = y[sample_rows_idx]
+        
+        return X_batch, y_batch
+
+
     def fit(self, X, y, verbose=False):
+        
+        random.seed(self.random_state)
+        
         X_mat, y_vec = self._prepare_data(X, y)
         m_instances, n_features = X_mat.shape
         self.weights = np.ones(n_features)
@@ -83,7 +115,12 @@ class MyLogReg():
             if i == 0:
                 continue
 
-            gradient = (X_mat.T @ (y_pred - y_vec)) / m_instances
+            X_batch, y_batch = self._get_batch(X_mat, y_vec, self.sgd_sample)
+
+            y_pred_batch = self.sigmoid(X_batch @ self.weights)
+            errors = y_pred_batch - y_batch
+
+            gradient = (X_batch.T @ errors) / len(y_batch)
 
             if is_lr_callable:
                 self.learning_rate_iter = self.learning_rate(i)
