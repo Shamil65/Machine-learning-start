@@ -69,7 +69,9 @@ class MyLogReg():
         l1 = self.l1_coef if self.reg in ['l1', 'elasticnet'] else 0.0
         l2 = self.l2_coef if self.reg in ['l2', 'elasticnet'] else 0.0
 
-        for i in range(self.n_iter):
+        is_lr_callable = callable(self.learning_rate)
+
+        for i in range(0, self.n_iter + 1):
             y_pred = self.sigmoid(X_mat @ self.weights)
 
             # Логируем и считаем метрику ТОЛЬКО на verbose-шагах
@@ -78,10 +80,18 @@ class MyLogReg():
                 metric_value = self._calculate_metric(y_vec, y_pred)
                 self._log(i, loss, metric_value)
 
+            if i == 0:
+                continue
+
             gradient = (X_mat.T @ (y_pred - y_vec)) / m_instances
 
+            if is_lr_callable:
+                self.learning_rate_iter = self.learning_rate(i)
+            else:
+                self.learning_rate_iter = self.learning_rate
+
             reg_gradient = gradient + l1 * np.sign(self.weights) + l2 * 2 * self.weights
-            self.weights -= self.learning_rate * reg_gradient
+            self.weights -= self.learning_rate_iter * reg_gradient
 
 
 
