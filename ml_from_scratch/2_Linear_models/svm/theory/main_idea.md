@@ -109,17 +109,26 @@ b ← 1.0
 
 ### 2.1 От primal к dual через лагранжиан
 
-Вводим множители Лагранжа $\alpha_i \ge 0$ для ограничений margin
-($y_i(w\cdot x_i+b) \ge 1 - \xi_i$) и $\mu_i \ge 0$ для $\xi_i \ge 0$:
+Вводим множители Лагранжа для двух групп ограничений:
+
+- $\alpha_i \ge 0$ — для ограничений margin:
+  $$y_i(w\cdot x_i+b) \ge 1 - \xi_i$$
+- $\mu_i \ge 0$ — для ограничений неотрицательности:
+  $$\xi_i \ge 0$$
+
+Лагранжиан задачи:
 
 $$
-\mathcal{L}(w,b,\xi,\alpha,\mu) = \|w\|^2 + C\sum_i \xi_i
-- \sum_i \alpha_i\bigl[y_i(w\cdot x_i+b) - 1 + \xi_i\bigr] - \sum_i \mu_i \xi_i
+\mathcal{L}(w,b,\xi,\alpha,\mu) = \|w\|^2 + C\sum_i \xi_i - \sum_i \alpha_i\bigl[y_i(w\cdot x_i+b) - 1 + \xi_i\bigr] - \sum_i \mu_i \xi_i
 $$
 
-Из условий стационарности ($\partial \mathcal{L}/\partial w = 0$,
-$\partial \mathcal{L}/\partial b = 0$, $\partial \mathcal{L}/\partial \xi_i = 0$)
-получаем:
+Условия стационарности:
+
+$$
+\frac{\partial \mathcal{L}}{\partial w} = 0, \qquad \frac{\partial \mathcal{L}}{\partial b} = 0, \qquad \frac{\partial \mathcal{L}}{\partial \xi_i} = 0
+$$
+
+Из них получаем:
 
 $$
 w = \frac{1}{2}\sum_i \alpha_i y_i x_i,
